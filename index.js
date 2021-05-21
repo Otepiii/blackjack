@@ -1,9 +1,12 @@
-let firstCard = Math.floor( Math.random() * 11) 
-let secondCard = Math.floor( Math.random() * 11) 
-let cards = [firstCard, secondCard]
-let sum = firstCard + secondCard;
+let player = {
+    name: "Joe",
+    chips: 145
+}
+
+let cards = []
+let sum = 0;
 let hasBlackJack = false; 
-let isAlive = true;
+let isAlive = false;
 let message = "";
 let startBtn = document.getElementById("start");
 let drawBtn = document.getElementById("draw")
@@ -11,13 +14,37 @@ let messageEl = document.getElementById("message-el");
 let sumEl = document.getElementById("sum")
 let cardsEl = document.querySelector(".cards");
 
-function startGame() {
-renderGame()
+let playerEl = document.getElementById("player-el")
+playerEl.textContent = player.name + ": $" + player.chips
+
+
+function getRandomCard() {
+    randomNumber = Math.floor( Math.random() * 13) + 1;
+    if (randomNumber > 10) {
+        return 10
+    } else if( randomNumber === 1){
+        return 11
+    } else {
+        return randomNumber
+    }
 }
+
+function startGame() {
+    isAlive = true
+    firstCard = getRandomCard()
+    secondCard = getRandomCard()
+    cards = [firstCard, secondCard]
+    sum = firstCard + secondCard
+    renderGame()
+}
+
 
 function renderGame() {
     sumEl.innerText = "Sum: " + sum;
-    cardsEl.innerText = "Cards: " + cards[0] + " & " + cards[1];  
+    cardsEl.textContent = "Cards: " 
+    for( let i = 0; i < cards.length; i++){
+        cardsEl.textContent += cards[i] + " ";
+    }
 
     if(sum < 21) {
         message = "Do you want to draw a new card? "
@@ -32,9 +59,13 @@ function renderGame() {
 }
 
 function newCard() {
-    let card = Math.floor( Math.random() * 11) 
-    sum += card;
-    renderGame()
+    if(isAlive && !hasBlackJack) {
+        let card = getRandomCard()
+        sum += card;
+        cards.push(card)
+        console.log(cards)
+        renderGame()
+    }
 }
 
 startBtn.addEventListener("click", startGame)
